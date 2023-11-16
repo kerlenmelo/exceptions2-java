@@ -1,5 +1,7 @@
 package model.entities;
 
+import exceptions.BusinessException;
+
 public class Account {
     private Integer number;
     private String holder;
@@ -46,19 +48,20 @@ public class Account {
 
     public void deposit (Double amount) {
         this.setBalance(this.getBalance() + amount);
-        System.out.println("Deposit completed successfully. Your balance is now: $" + this.getBalance());
     }
+    
     public void withdraw (Double amount) {
-        if (this.getBalance() < amount) {
-            System.out.println("Withdraw error: not enough balance");
-        } 
-        else if (amount > this.getWithdrawLimit()) {
-            System.out.println("Withdraw error: The amount exceeds withdraw limit");
-        }
-        else {
-            this.setBalance(this.getBalance() - amount);
-            System.out.println("Withdraw completed successfully. Your balance is now: $" + this.getBalance());
-        }
+        validateWithdraw(amount);
+        this.setBalance(this.getBalance() - amount);
     }
-
+    
+    private void validateWithdraw (Double amount) {
+        if (amount > this.getWithdrawLimit()) {
+            throw new BusinessException("Withdraw error: The amount exceeds withdraw limit");
+        }
+        if (this.getBalance() < amount) {
+            throw new BusinessException("Withdraw error: not enough balance");
+        } 
+        
+    }
 }

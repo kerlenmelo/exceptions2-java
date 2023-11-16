@@ -2,6 +2,7 @@ package app;
 
 import java.util.Scanner;
 
+import exceptions.BusinessException;
 import model.entities.Account;
 
 public class Program {
@@ -10,7 +11,7 @@ public class Program {
     public static void accountMenu(Account bankAccount) {
         
         while (true) {
-            System.out.println("\n\t*** MENU ***\t");
+            System.out.println("\n\t--- MENU ---\t");
             System.out.print("Choice a option for your account bank: "
                 +"\n1 - Deposit" + "\n2 - Withdraw" 
                 +"\n3 - End the program" + "\n: ");
@@ -22,13 +23,20 @@ public class Program {
                     System.out.print("Enter the amount of money to deposit: ");
                     Double moneyDeposit = input.nextDouble();
                     bankAccount.deposit(moneyDeposit);
+                    System.out.println("Deposit completed successfully. Your balance is now: $" + bankAccount.getBalance());
                     break;
                 }
                 case 2: {
                     System.out.println("\nBank Withdraw");
                     System.out.print("Enter the amount of money to withdraw: ");
                     Double moneyWithdraw = input.nextDouble();
-                    bankAccount.withdraw(moneyWithdraw);
+                    try {
+                        bankAccount.withdraw(moneyWithdraw);
+                        System.out.println("Withdraw completed successfully. Your balance is now: $"+bankAccount.getBalance());
+                    }
+                    catch (BusinessException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 }
                 default: {
